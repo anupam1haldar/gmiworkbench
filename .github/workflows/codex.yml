@@ -1,0 +1,27 @@
+name: Codex Worker
+on:
+  workflow_dispatch:
+    inputs:
+      work_order_id:
+        description: 'Engineering work order id'
+        required: true
+      prompt:
+        description: 'Task prompt for Codex'
+        required: true
+jobs:
+  codex:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Notify start
+        run: echo "Codex worker triggered for ${{ github.event.inputs.work_order_id }}"
+      - name: Run Codex task
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          WORK_ORDER_ID: ${{ github.event.inputs.work_order_id }}
+          PROMPT: ${{ github.event.inputs.prompt }}
+        run: |
+          echo "Executing Codex task (placeholder for platform-managed run)."
