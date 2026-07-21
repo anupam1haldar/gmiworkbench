@@ -31,12 +31,12 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout working branch
+      - name: Checkout default branch (has runner script)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
 
       - uses: actions/setup-node@v4
         with:
