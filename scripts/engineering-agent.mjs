@@ -38,7 +38,8 @@ async function callback(event, status) {
 }
 
 function git(args, opts = {}) {
-  return execSync(`git ${args}`, { stdio: "pipe", encoding: "utf8", ...opts }).trim();
+  const out = execSync(`git ${args}`, { stdio: "pipe", encoding: "utf8", ...opts });
+  return typeof out === "string" ? out.trim() : "";
 }
 
 async function githubApi(path, init = {}) {
