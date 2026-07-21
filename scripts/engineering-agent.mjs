@@ -9,7 +9,32 @@ import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 
 const env = process.env;
 const REQUIRED = ["WORK_ORDER_ID", "BRANCH", "TITLE", "GITHUB_TOKEN", "GITHUB_REPOSITORY"];
-for (const k of REQUIRED) if (!env[k]) throw new Error(`Missing required env: ${k}`);
+const missing = REQUIRED.filter((k) => !env[k]);
+if (missing.length > 0) {
+  const msg = `Missing required env: ${missing.join(", ")}`;
+  // Best-effort failure callback so the platform doesn't stall at running/started.
+  try {
+    if (env.WORK_ORDER_ID && env.PLATFORM_CALLBACK_URL) {
+      const body = JSON.stringify({
+        workOrderId: env.WORK_ORDER_ID,
+        externalRunId: env.GITHUB_RUN_ID ?? null,
+        externalRunUrl:
+          env.GITHUB_SERVER_URL && env.GITHUB_RUN_ID && env.GITHUB_REPOSITORY
+            ? `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}`
+            : null,
+        event: { level: "error", step: "failed", message: msg },
+        status: { state: "failed", failureReason: msg },
+      });
+      const headers = { "content-type": "application/json", "x-agent-id": "lovable" };
+      if (env.PLATFORM_CALLBACK_SECRET) {
+        headers["x-agent-signature"] = "sha256=" +
+          createHmac("sha256", env.PLATFORM_CALLBACK_SECRET).update(body).digest("hex");
+      }
+      await fetch(env.PLATFORM_CALLBACK_URL, { method: "POST", headers, body });
+    }
+  } catch (e) { console.error("[startup callback failed]", e); }
+  throw new Error(msg);
+}
 
 const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
 const runUrl = env.GITHUB_SERVER_URL && env.GITHUB_RUN_ID
