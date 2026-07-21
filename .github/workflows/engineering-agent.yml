@@ -27,6 +27,8 @@ permissions:
   contents: write
   pull-requests: write
 
+run-name: WO-${{ inputs.work_order_number }} ${{ inputs.branch }}
+
 jobs:
   run:
     runs-on: ubuntu-latest
