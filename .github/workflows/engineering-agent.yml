@@ -1,0 +1,60 @@
+name: Engineering Agent
+on:
+  workflow_dispatch:
+    inputs:
+      work_order_id:
+        description: 'Work order id (uuid)'
+        required: true
+      work_order_number:
+        description: 'Work order number'
+        required: true
+      branch:
+        description: 'Working branch to create the PR from'
+        required: true
+      title:
+        description: 'Work order title'
+        required: true
+      description:
+        description: 'Work order description'
+        required: false
+        default: ''
+      acceptance:
+        description: 'Acceptance criteria'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute engineering agent
+        env:
+          WORK_ORDER_ID: ${{ github.event.inputs.work_order_id }}
+          WORK_ORDER_NUMBER: ${{ github.event.inputs.work_order_number }}
+          BRANCH: ${{ github.event.inputs.branch }}
+          TITLE: ${{ github.event.inputs.title }}
+          DESCRIPTION: ${{ github.event.inputs.description }}
+          ACCEPTANCE: ${{ github.event.inputs.acceptance }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          LOVABLE_API_KEY: ${{ secrets.LOVABLE_API_KEY }}
+          PLATFORM_CALLBACK_URL: ${{ secrets.PLATFORM_CALLBACK_URL }}
+          PLATFORM_CALLBACK_SECRET: ${{ secrets.PLATFORM_CALLBACK_SECRET }}
+        run: node scripts/engineering-agent.mjs
