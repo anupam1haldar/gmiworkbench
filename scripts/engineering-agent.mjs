@@ -64,6 +64,27 @@ async function run() {
     { state: "running" },
   );
 
+  git(`config user.email "engineering-agent@users.noreply.github.com"`);
+  git(`config user.name "Lovable Engineering Agent"`);
+
+  // Ensure the working branch exists locally and includes latest tooling from
+  // the default branch. Handles pre-existing branches created before the runner
+  // script was installed. Do this BEFORE writing any files so untracked
+  // work-order notes don't block the checkout.
+  const defaultBranchName = (await githubApi(`/repos/${owner}/${repo}`)).default_branch;
+  git(`fetch origin ${env.BRANCH}:refs/remotes/origin/${env.BRANCH}`, { stdio: "ignore" });
+  const hasRemote = (() => {
+    try { git(`rev-parse --verify refs/remotes/origin/${env.BRANCH}`); return true; }
+    catch { return false; }
+  })();
+  if (hasRemote) {
+    git(`checkout -B ${env.BRANCH} refs/remotes/origin/${env.BRANCH}`);
+    try { git(`merge --no-edit origin/${defaultBranchName}`); }
+    catch { /* leave to fail on push if truly divergent */ }
+  } else {
+    git(`checkout -B ${env.BRANCH}`);
+  }
+
   // --- Placeholder edit step ---
   // The full edit/build/test loop wiring lands in a follow-up. For now the
   // agent records the work order intent so the branch has a real commit,
@@ -83,26 +104,6 @@ async function run() {
     "",
   ].join("\n"));
 
-  git(`config user.email "engineering-agent@users.noreply.github.com"`);
-  git(`config user.name "Lovable Engineering Agent"`);
-
-  // Ensure the working branch exists locally and includes latest tooling from
-  // the default branch. Handles pre-existing branches created before the runner
-  // script was installed.
-  const defaultBranchName = (await githubApi(`/repos/${owner}/${repo}`)).default_branch;
-  git(`fetch origin ${env.BRANCH}:refs/remotes/origin/${env.BRANCH}`, { stdio: "ignore" });
-  const hasRemote = (() => {
-    try { git(`rev-parse --verify refs/remotes/origin/${env.BRANCH}`); return true; }
-    catch { return false; }
-  })();
-  if (hasRemote) {
-    git(`checkout -B ${env.BRANCH} refs/remotes/origin/${env.BRANCH}`);
-    try { git(`merge --no-edit origin/${defaultBranchName}`); }
-    catch { /* leave to fail on push if truly divergent */ }
-  } else {
-    git(`checkout -B ${env.BRANCH}`);
-  }
-
   git(`add ${notesPath}`);
   try {
     git(`commit -m "chore(factory): record work order ${env.WORK_ORDER_NUMBER ?? env.WORK_ORDER_ID}"`);
@@ -110,6 +111,7 @@ async function run() {
 
   const commitSha = git("rev-parse HEAD");
   git(`push origin HEAD:${env.BRANCH}`);
+
 
 
   await callback(
