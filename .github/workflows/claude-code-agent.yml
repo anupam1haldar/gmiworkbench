@@ -26,6 +26,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   run:
@@ -53,4 +54,4 @@ jobs:
 
             Implement this change in the current repository. Make the smallest correct change that satisfies the acceptance criteria, run the project's existing build/test commands if present, and commit your work. Open a pull request from the current branch against the default branch when done, with a clear description of what changed and why.
           claude_args: |
-            --max-turns 15
+            --max-turns 30
