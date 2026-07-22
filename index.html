@@ -3,11 +3,274 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GMI</title>
+    <title>GMI | Hospital Operations Management System</title>
+    <meta
+      name="description"
+      content="GMI is a Hospital Operations Management System that unifies scheduling, bed management, staff coordination, and reporting for healthcare facilities."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --color-bg: #f7f9fb;
+        --color-surface: #ffffff;
+        --color-text: #182432;
+        --color-muted: #55637a;
+        --color-primary: #1462d1;
+        --color-border: #e1e7ef;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--color-text);
+        background: var(--color-bg);
+        line-height: 1.5;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .section-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+
+      /* Hero */
+      .hero {
+        background: linear-gradient(180deg, #eef4ff 0%, var(--color-bg) 100%);
+        text-align: center;
+        padding-top: 5rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin: 0 0 1rem;
+      }
+
+      .hero p.tagline {
+        font-size: 1.25rem;
+        color: var(--color-muted);
+        max-width: 640px;
+        margin: 0 auto 2rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .button.primary {
+        background: var(--color-primary);
+        color: #fff;
+      }
+
+      .button.secondary {
+        background: transparent;
+        color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+      }
+
+      /* Overview */
+      .overview h2 {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .overview p {
+        color: var(--color-muted);
+        max-width: 760px;
+      }
+
+      /* Feature highlights */
+      .features {
+        background: var(--color-surface);
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .features h2 {
+        font-size: 1.75rem;
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .feature-card {
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+
+      .feature-card h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: var(--color-muted);
+        font-size: 0.95rem;
+      }
+
+      /* Supporting info */
+      .supporting .section-inner {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 2rem;
+      }
+
+      .supporting h2 {
+        font-size: 1.1rem;
+        margin: 0 0 0.5rem;
+      }
+
+      .supporting p {
+        color: var(--color-muted);
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 1.5rem;
+        color: var(--color-muted);
+        font-size: 0.85rem;
+      }
+    </style>
   </head>
   <body>
     <main>
-      <h1>GMI</h1>
+      <section class="hero">
+        <div class="section-inner">
+          <h1>GMI Hospital Operations Management System</h1>
+          <p class="tagline">
+            One platform to coordinate beds, staff, scheduling, and reporting
+            across your facility — so care teams spend less time on
+            administration and more time on patients.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#overview">See how it works</a>
+            <a class="button secondary" href="#features">Explore features</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="overview" id="overview">
+        <div class="section-inner">
+          <h2>Built for hospital operations</h2>
+          <p>
+            GMI brings the day-to-day work of running a hospital into a single
+            system of record. Administrators get real-time visibility into
+            capacity and staffing, clinical teams get faster access to the
+            information they need, and leadership gets the reporting required
+            to keep operations running smoothly and compliantly.
+          </p>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="section-inner">
+          <h2>Feature highlights</h2>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3>Bed &amp; capacity management</h3>
+              <p>
+                Track bed availability, admissions, and discharges in real
+                time to keep units running at safe, efficient capacity.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Staff scheduling</h3>
+              <p>
+                Build and adjust shift schedules across departments, with
+                visibility into coverage gaps before they become problems.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Patient flow coordination</h3>
+              <p>
+                Coordinate transfers, procedures, and discharges across teams
+                so patients move through care without unnecessary delays.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Reporting &amp; compliance</h3>
+              <p>
+                Generate operational and regulatory reports from a single
+                source of truth, reducing manual reconciliation work.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Role-based access</h3>
+              <p>
+                Give administrators, clinicians, and support staff the views
+                and permissions appropriate to their role.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Facility-wide dashboards</h3>
+              <p>
+                See census, staffing, and throughput at a glance, across one
+                unit or the entire facility.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="supporting">
+        <div class="section-inner">
+          <div>
+            <h2>Who it's for</h2>
+            <p>
+              Hospital administrators, unit managers, and care coordination
+              teams looking to reduce operational overhead.
+            </p>
+          </div>
+          <div>
+            <h2>How it fits in</h2>
+            <p>
+              Designed to complement existing clinical systems, GMI focuses on
+              the operational layer that keeps a facility running.
+            </p>
+          </div>
+          <div>
+            <h2>Getting started</h2>
+            <p>
+              Reach out to your GMI representative to schedule a walkthrough
+              tailored to your facility's operations.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <footer>&copy; 2026 GMI. All rights reserved.</footer>
   </body>
 </html>
