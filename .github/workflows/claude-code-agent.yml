@@ -23,10 +23,13 @@ on:
         required: false
         default: ''
 
+run-name: WO-${{ inputs.work_order_number }} ${{ inputs.branch }}
+
 permissions:
   contents: write
   pull-requests: write
   id-token: write
+
 
 
 jobs:
@@ -58,6 +61,7 @@ jobs:
           claude_args: |
             --max-turns 30
             --permission-mode bypassPermissions
+            --model claude-sonnet-5
           display_report: "true"
 
       - name: Upload Claude execution log
