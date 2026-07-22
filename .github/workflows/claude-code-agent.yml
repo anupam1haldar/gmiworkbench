@@ -40,6 +40,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Claude Code
+        id: claude
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -56,4 +57,15 @@ jobs:
             Implement this change in the current repository. Make the smallest correct change that satisfies the acceptance criteria, run the project's existing build/test commands if present, and commit your work. Open a pull request from the current branch against the default branch when done, with a clear description of what changed and why.
           claude_args: |
             --max-turns 30
+            --permission-mode bypassPermissions
+          display_report: "true"
+
+      - name: Upload Claude execution log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-execution-log
+          path: ${{ steps.claude.outputs.execution_file }}
+
+
 
