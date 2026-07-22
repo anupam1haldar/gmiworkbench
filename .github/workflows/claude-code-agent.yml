@@ -1,0 +1,56 @@
+name: Claude Code Engineering Agent
+on:
+  workflow_dispatch:
+    inputs:
+      work_order_id:
+        description: 'Work order id (uuid)'
+        required: true
+      work_order_number:
+        description: 'Work order number'
+        required: true
+      branch:
+        description: 'Working branch to commit to and open the PR from'
+        required: true
+      title:
+        description: 'Work order title'
+        required: true
+      description:
+        description: 'Work order description'
+        required: false
+        default: ''
+      acceptance:
+        description: 'Acceptance criteria'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          base_branch: ${{ github.event.repository.default_branch }}
+          prompt: |
+            You are implementing work order #${{ github.event.inputs.work_order_number }}: ${{ github.event.inputs.title }}
+
+            Description:
+            ${{ github.event.inputs.description }}
+
+            Acceptance criteria:
+            ${{ github.event.inputs.acceptance }}
+
+            Implement this change in the current repository. Make the smallest correct change that satisfies the acceptance criteria, run the project's existing build/test commands if present, and commit your work. Open a pull request from the current branch against the default branch when done, with a clear description of what changed and why.
+          claude_args: |
+            --max-turns 15
